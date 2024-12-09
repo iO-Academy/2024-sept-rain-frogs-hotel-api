@@ -22,7 +22,7 @@ class RoomSeeder extends Seeder
                 'min_capacity' => rand(1,2),
                 'max_capacity' => rand(2,6),
                 'rate'=>rand(50,300),
-                'type'=>rand(1,5),
+                'type_id'=>rand(1,5),
             ]);
         }
     }

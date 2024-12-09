@@ -22,7 +22,7 @@ class BookingSeeder extends Seeder
                 'start' => $start_date,
                 'end' => Carbon::createFromFormat('Y-m-d',$start_date)
                 ->addDays(rand(1,30)),
-                'room'=> rand(1,10)
+                'room_id'=> rand(1,10)
             ]);
         }
     }

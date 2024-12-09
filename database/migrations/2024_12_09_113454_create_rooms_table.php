@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('min_capacity')->default(1);
             $table->integer('max_capacity');
             $table->string('description', 500);
-            $table->foreignId('type');
+            $table->foreignId('type_id');
             $table->timestamps();
         });
     }

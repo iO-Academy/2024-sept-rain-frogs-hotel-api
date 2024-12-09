@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('customer');
             $table->date('start');
             $table->date('end');
-            $table->foreignId('room');
+            $table->foreignId('room_id');
             $table->timestamps();
         });
     }
