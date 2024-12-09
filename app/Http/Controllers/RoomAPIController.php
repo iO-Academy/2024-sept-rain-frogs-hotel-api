@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 
 class RoomAPIController extends Controller
 {
-   public function find(int $id){
+   public function find(int $id): \Illuminate\Http\JsonResponse
+   {
        $room = Room::find($id);
        if($room){
            return response()->json([
@@ -21,8 +22,8 @@ class RoomAPIController extends Controller
                    'max_capacity' => $room->max_capacity,
                    'description' => $room->description,
                    'type' => [
-                       'id'=> $room->type->id,
-                       'name'=>$room->type->name,
+                       'id' => $room->type->id,
+                       'name' => $room->type->name,
                     ]
                ]
            ]);
