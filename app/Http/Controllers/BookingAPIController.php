@@ -24,6 +24,8 @@ class BookingAPIController extends Controller
         $room = Room::find($request->room_id);
         $startDate = $request->start;
         $endDate = $request->end;
+
+
         $bookingConflict = Booking::where('room_id', $room->id)
             ->where(function ($query) use ($startDate, $endDate) {
                 $query->whereBetween('start', [$startDate, $endDate])
