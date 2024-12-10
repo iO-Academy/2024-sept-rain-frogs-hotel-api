@@ -13,9 +13,8 @@ class TypeSeeder extends Seeder
      */
     public function run(): void
     {
-        $types= ['Sea-view', 'Pool-view', 'Garden-view', 'Penthouse','Mountain-view'];
-        foreach ($types as $type)
-        {
+        $types = ['Sea-view', 'Pool-view', 'Garden-view', 'Penthouse','Mountain-view'];
+        foreach ($types as $type) {
           DB::table('types')->insert([
               'name' => $type,
           ]);

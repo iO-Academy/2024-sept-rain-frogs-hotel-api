@@ -20,13 +20,13 @@ class RoomFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' =>$this->faker->sentence(2),
+            'name' => $this->faker->sentence(2),
             'description' => $this->faker->paragraph(2),
             'image' => $this->faker->imageUrl($width = 640, $height = 480),
             'min_capacity' => rand(1,2),
             'max_capacity' => rand(2,6),
-            'rate'=>rand(50,300),
-            'type_id'=>rand(1,5),
+            'rate' => rand(50,300),
+            'type_id' => rand(1,5),
         ];
     }
 }

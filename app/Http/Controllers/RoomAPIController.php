@@ -17,6 +17,6 @@ class RoomAPIController extends Controller
             'message' => 'Rooms successfully retrieved',
             'success' => true,
             'data' => $rooms
-        ], 200);
+        ]);
     }
 }

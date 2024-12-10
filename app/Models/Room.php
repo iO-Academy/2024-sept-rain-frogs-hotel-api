@@ -10,9 +10,8 @@ class Room extends Model
 {
     use HasFactory;
 
-    public function type():BelongsTo
+    public function type(): BelongsTo
     {
         return $this->belongsTo(Type::class);
     }
-
 }
