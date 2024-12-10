@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Room extends Model
 {
     use HasFactory;
+
     public function type(): BelongsTo
     {
         return $this->belongsTo(Type::class);

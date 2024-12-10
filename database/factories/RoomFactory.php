@@ -23,8 +23,8 @@ class RoomFactory extends Factory
             'image' => $this->faker->imageUrl($width = 400, $height = 400),
             'min_capacity' => rand(1,2),
             'max_capacity' => rand(2,6),
-            'rate'=>rand(50,300),
-            'type_id'=>Type::factory()
+            'rate' => rand(50,300),
+            'type_id' => Type::factory()
         ];
     }
 }

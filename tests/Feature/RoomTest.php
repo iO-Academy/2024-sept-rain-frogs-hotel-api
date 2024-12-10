@@ -23,7 +23,7 @@ class RoomTest extends TestCase
                 ->has('data', function(AssertableJson $json) {
                     $json->hasAll(['id', 'name', 'rate', 'image',
                         'min_capacity', 'max_capacity', 'description',
-                        'type'])
+                        'type_id', 'created_at', 'updated_at'])
                     ->whereAllType([
                         'id' => 'integer',
                         'name' => 'string',
@@ -32,7 +32,9 @@ class RoomTest extends TestCase
                         'min_capacity' => 'integer',
                         'max_capacity' => 'integer',
                         'description' => 'string',
-                        'type' => 'array'
+                        'type' => 'array',
+                        'created_at' => 'string|null',
+                        'updated_at' => 'string|null'
                     ]);
                 });
             });
