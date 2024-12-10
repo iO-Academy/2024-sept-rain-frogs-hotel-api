@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Type extends Model
 {
     use HasFactory;
+
     public function rooms(): HasMany
     {
         return $this->hasMany(Room::class);

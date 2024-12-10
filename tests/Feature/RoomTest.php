@@ -12,11 +12,8 @@ use Tests\TestCase;
 
 class RoomTest extends TestCase
 {
-
     use DatabaseMigrations;
-    /**
-     * A basic feature test example.
-     */
+
     public function test_getAllRooms_success(): void
     {
         Room::factory()->create();

@@ -16,6 +16,6 @@ class RoomAPIController extends Controller
         return response()->json([
             'message' => 'Rooms successfully retrieved',
             'data' => $rooms
-        ], 200);
+        ]);
     }
 }
