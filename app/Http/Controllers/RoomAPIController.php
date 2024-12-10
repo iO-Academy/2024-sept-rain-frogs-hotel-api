@@ -9,8 +9,7 @@ class RoomAPIController extends Controller
 {
    public function find(int $id): \Illuminate\Http\JsonResponse
    {
-       $rooms = Room::with('type')->get();
-       $room = $rooms->firstWhere('id', $id);
+       $room = Room::with('type:id,name')->find($id)->makeHidden(['type_id', 'created_at', 'updated_at']);
        if (!$room) {
            return response()->json([
                'message'=> "Room with id {$id} not found"
