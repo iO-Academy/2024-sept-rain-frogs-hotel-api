@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Room;
+use App\Models\Type;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -16,6 +17,8 @@ class RoomTest extends TestCase
     public function test_getRoom_by_id_success(): void
     {
         Room::factory()->create();
+        Type::factory()->create();
+
         $response = $this->get('/api/rooms/1');
         $response->assertStatus(200)
             ->assertJson(function(AssertableJson $json) {
@@ -23,7 +26,7 @@ class RoomTest extends TestCase
                 ->has('data', function(AssertableJson $json) {
                     $json->hasAll(['id', 'name', 'rate', 'image',
                         'min_capacity', 'max_capacity', 'description',
-                        'type_id', 'created_at', 'updated_at'])
+                        'type'])
                     ->whereAllType([
                         'id' => 'integer',
                         'name' => 'string',
@@ -32,9 +35,7 @@ class RoomTest extends TestCase
                         'min_capacity' => 'integer',
                         'max_capacity' => 'integer',
                         'description' => 'string',
-                        'type' => 'array',
-                        'created_at' => 'string|null',
-                        'updated_at' => 'string|null'
+                        'type' => 'array'
                     ]);
                 });
             });
