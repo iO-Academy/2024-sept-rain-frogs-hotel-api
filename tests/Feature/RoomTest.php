@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Room;
+use App\Models\Type;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -24,21 +25,16 @@ class RoomTest extends TestCase
 
         $response->assertStatus(200)
             ->assertJson(function (AssertableJson $json) {
-                $json->hasAll(['message', 'success', 'data'])
+                $json->hasAll(['message', 'data'])
                     ->has('data', 1, function (AssertableJson $data) {
-                    $data->hasAll(['id', 'name', 'rate', 'image', 'min_capacity', 'max_capacity',
-                        'description', 'type_id', 'created_at', 'updated_at'])
+                    $data->hasAll(['id', 'name', 'image', 'min_capacity', 'max_capacity', 'type'])
                         ->whereAllType([
                             'id' => 'integer',
                             'name' => 'string',
-                            'rate'=> 'integer',
                             'image'=> 'string',
                             'min_capacity' => 'integer',
                             'max_capacity' => 'integer',
-                            'description' => 'string',
-                            'type_id' => 'integer',
-                            'created_at' => 'string|null',
-                            'updated_at' => 'string|null',
+                            'type' => 'array',
                         ]);
                     });
             });
