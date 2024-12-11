@@ -4,17 +4,12 @@ namespace Database\Factories;
 
 use App\Models\Type;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Room>
- */
 class RoomFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    use HasFactory;
+
     public function definition(): array
     {
         return [
@@ -25,6 +20,7 @@ class RoomFactory extends Factory
             'max_capacity' => rand(2,6),
             'rate' => rand(50,300),
             'type_id' => Type::factory()
+
         ];
     }
 }

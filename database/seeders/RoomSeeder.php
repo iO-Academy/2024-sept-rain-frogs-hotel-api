@@ -21,8 +21,8 @@ class RoomSeeder extends Seeder
                 'image' => $faker->imageUrl($width = 400, $height = 400),
                 'min_capacity' => rand(1,2),
                 'max_capacity' => rand(2,6),
-                'rate'=>rand(50,300),
-                'type_id'=>rand(1,5),
+                'rate' => $faker->randomFloat(2, 50,300),
+                'type_id' => rand(1,5),
             ]);
         }
     }
