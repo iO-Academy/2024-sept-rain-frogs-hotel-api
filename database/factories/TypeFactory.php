@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Type>
  */
+
 class TypeFactory extends Factory
 {
     /**
@@ -15,10 +16,11 @@ class TypeFactory extends Factory
      *
      * @return array<string, mixed>
      */
+
     public function definition(): array
     {
         return [
-            'name'=>$this->faker->word()
+            'name' => $this->faker->word()
         ];
     }
 }
