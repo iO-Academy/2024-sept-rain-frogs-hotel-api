@@ -20,7 +20,6 @@ class RoomFactory extends Factory
             'max_capacity' => rand(2,6),
             'rate' => rand(50,300),
             'type_id' => Type::factory()
-
         ];
     }
 }
