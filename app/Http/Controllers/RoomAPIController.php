@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Room;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class RoomAPIController extends Controller
@@ -18,4 +19,18 @@ class RoomAPIController extends Controller
             'data' => $rooms
         ]);
     }
+   public function find(int $id): JsonResponse
+   {
+       $room = Room::with('type:id,name')->find($id)?->makeHidden(['type_id', 'created_at', 'updated_at']);
+       if (!$room) {
+           return response()->json([
+               'message'=> "Room with id {$id} not found"
+           ],404);
+       } else {
+           return response()->json([
+               'message'=> 'Room successfully retrieved',
+               'data'=> $room
+           ]);
+       }
+   }
 }

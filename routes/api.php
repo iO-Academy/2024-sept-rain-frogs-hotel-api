@@ -9,3 +9,4 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::get('/rooms', [RoomAPIController::class, 'index']);
+Route::get('/rooms/{id}', [RoomAPIController::class, 'find']);
