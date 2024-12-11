@@ -21,7 +21,19 @@ class BookingTest extends TestCase
 
         $response->assertStatus(200)
         ->assertJson(function (AssertableJson $json) {
-            $json->hasAll(['message', 'success', 'data']);
+            $json->hasAll(['message', 'success', 'data'])
+            ->has('data', 1 , function (AssertableJson $data) {
+                $data->hasAll(['id', 'customer', 'start', 'end', 'created_at', 'room'])
+                    ->whereAllType([
+                        'id' => 'integer',
+                        'customer' => 'string',
+                        'start' => 'string',
+                        'end' => 'string',
+                        'created_at' => 'string|null',
+                        'room' => 'array'
+                    ]);
+            }
+            );
         });
     }
 }
