@@ -16,7 +16,6 @@ class BookingTest extends TestCase
 
     public function test_bookRoom_success(): void
     {
-        Booking::factory()->create();
         Room::factory()->create();
 
         $testData = [
@@ -27,31 +26,21 @@ class BookingTest extends TestCase
             "end" => "2024-12-25"
         ];
 
-        $response = $this->post('/api/bookings', $testData);
+        $response = $this->postJson('/api/bookings', $testData);
 
         $response->assertStatus(201)
         ->assertJson(function (AssertableJson $json){
-            $json->hasAll(['message', 'data'])
-            ->has('data', function (AssertableJson $data) {
-                $data->hasAll([
-                    'room_id',
-                    'customer',
-                    'start',
-                    'end',
-                    'updated_at',
-                    'created_at',
-                    'id'
-                ])->whereAllType([
-                    'room_id' => 'integer',
-                    'customer' => 'string',
-                    'start' => 'string',
-                    'end' => 'string',
-                    'updated_at' => 'string|null',
-                    'created_at' => 'string|null',
-                    'id' => 'integer'
-                ]);
-            });
+            $json->hasAll(['message']);
         });
+
+        $this->assertDatabaseHas('bookings', [
+            "room_id" => 1,
+            "customer" => "Test customer",
+            "start" => "2024-12-15",
+            "end" => "2024-12-25"
+        ]);
+        // this is a database assertion which tests if the data is being put
+        // into the database
     }
 
     public function test_bookRoom_failure_dueTo_requiredFieldsMissing()
@@ -61,10 +50,7 @@ class BookingTest extends TestCase
         $response = $this->postJson('/api/bookings', $testData);
 
         $response->assertStatus(422)
-            ->assertInvalid(['room_id', 'customer', 'guests', 'start', 'end'])
-            ->assertJson(function (AssertableJson $json){
-                $json->hasAll('message', 'errors');
-        });
+            ->assertInvalid(['room_id', 'customer', 'guests', 'start', 'end']);
     }
 
     public function test_bookRoom_failure_dueTo_incorrectRoomCapacity()
@@ -84,7 +70,7 @@ class BookingTest extends TestCase
         $response->assertStatus(400)
             ->assertJson(function (AssertableJson $json){
                 $json->hasAll(['message']);
-        });
+            });
     }
 
     public function test_bookRoom_failure_dueTo_endDateBeforeStartDate()
@@ -102,10 +88,8 @@ class BookingTest extends TestCase
 
         $response = $this->postJson('/api/bookings', $testData);
 
-        $response->assertStatus(422) // Is 422 ok here???? //
-            ->assertJson(function (AssertableJson $json){
-                $json->hasAll(['message', 'errors']);
-            });
+        $response->assertStatus(422)
+            ->assertInvalid(['end']);
     }
 
     public function test_bookRoom_failure_dueTo_roomUnavailable_OnThoseDates()

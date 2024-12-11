@@ -18,7 +18,6 @@ class RoomTest extends TestCase
     public function test_getAllRooms_success(): void
     {
         Room::factory()->create();
-        Type::factory()->create();
 
         $response = $this->getJson('/api/rooms');
 
