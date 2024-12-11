@@ -7,16 +7,12 @@ use App\Models\Room;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
 class BookingTest extends TestCase
 {
     use DatabaseMigrations;
-
-    // Test booking success
-    // Test dates work correctly
-    // Test room capacity
-    // Test validation?
 
     public function test_bookRoom_success(): void
     {
@@ -26,13 +22,110 @@ class BookingTest extends TestCase
         $testData = [
             "room_id" => 1,
             "customer" => "Test customer",
-            "guests" => 3,
+            "guests" => 2,
             "start" => "2024-12-15",
             "end" => "2024-12-25"
         ];
 
         $response = $this->post('/api/bookings', $testData);
 
-        $response->assertStatus(201);
+        $response->assertStatus(201)
+        ->assertJson(function (AssertableJson $json){
+            $json->hasAll(['message', 'data'])
+            ->has('data', function (AssertableJson $data) {
+                $data->hasAll([
+                    'room_id',
+                    'customer',
+                    'start',
+                    'end',
+                    'updated_at',
+                    'created_at',
+                    'id'
+                ])->whereAllType([
+                    'room_id' => 'integer',
+                    'customer' => 'string',
+                    'start' => 'string',
+                    'end' => 'string',
+                    'updated_at' => 'string|null',
+                    'created_at' => 'string|null',
+                    'id' => 'integer'
+                ]);
+            });
+        });
+    }
+
+    public function test_bookRoom_failure_dueTo_requiredFieldsMissing()
+    {
+        $testData = [];
+
+        $response = $this->postJson('/api/bookings', $testData);
+
+        $response->assertStatus(422)
+            ->assertInvalid(['room_id', 'customer', 'guests', 'start', 'end'])
+            ->assertJson(function (AssertableJson $json){
+                $json->hasAll('message', 'errors');
+        });
+    }
+
+    public function test_bookRoom_failure_dueTo_incorrectRoomCapacity()
+    {
+        Room::factory()->create();
+
+        $testData = [
+            "room_id" => 1,
+            "customer" => "Test customer",
+            "guests" => 500,
+            "start" => "2024-12-15",
+            "end" => "2024-12-25"
+        ];
+
+        $response = $this->post('/api/bookings', $testData);
+
+        $response->assertStatus(400)
+            ->assertJson(function (AssertableJson $json){
+                $json->hasAll(['message']);
+        });
+    }
+
+    public function test_bookRoom_failure_dueTo_endDateBeforeStartDate()
+    {
+        Booking::factory()->create();
+        Room::factory()->create();
+
+        $testData = [
+            "room_id" => 1,
+            "customer" => "Test customer",
+            "guests" => 2,
+            "start" => "2026-12-25",
+            "end" => "2026-12-01"
+        ];
+
+        $response = $this->postJson('/api/bookings', $testData);
+
+        $response->assertStatus(422) // Is 422 ok here???? //
+            ->assertJson(function (AssertableJson $json){
+                $json->hasAll(['message', 'errors']);
+            });
+    }
+
+    public function test_bookRoom_failure_dueTo_roomUnavailable_OnThoseDates()
+    {
+        Booking::factory()->create();
+        Room::factory()->create();
+
+        $testData = [
+            "room_id" => 1,
+            "customer" => "Test customer",
+            "guests" => 2,
+            'start' => "2025-12-11",
+            'end' => "2025-12-31",
+        ];
+
+        $response = $this->postJson('/api/bookings', $testData);
+
+        $response->assertStatus(400)
+            ->assertJson(function (AssertableJson $json){
+                $json->hasAll(['message']);
+            });
     }
 }
