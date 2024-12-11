@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\Room;
 use Illuminate\Http\Request;
 
 class BookingAPIController extends Controller
@@ -23,4 +24,14 @@ class BookingAPIController extends Controller
             'data' => $currentAndFutureBookings
         ]);
     }
+//     public function report()
+//     {
+//         $roomsWithBookings = Room::with('bookings:id,name')->get();
+//         return response()->json([
+//             'message' => 'Booking retrieved successfully.',
+//             'success' => true,
+//             'data' => $roomsWithBookings
+//         ]);
+//     }
+
 }
