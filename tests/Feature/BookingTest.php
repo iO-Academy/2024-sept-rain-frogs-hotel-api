@@ -65,4 +65,14 @@ class BookingTest extends TestCase
        $response->assertStatus(422)
            ->assertInvalid('room_id');
    }
+
+   public function test_deleteBooking_success(): void
+   {
+       Booking::factory()->create();
+
+       $response = $this->deleteJson('/api/bookings?room_id=1');
+
+       $response->assertStatus(200)
+               ->assertInvalid('message');
+   }
 }
