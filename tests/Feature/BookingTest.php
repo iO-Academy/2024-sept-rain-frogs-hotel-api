@@ -21,21 +21,21 @@ class BookingTest extends TestCase
         $response = $this->getJson('/api/bookings');
 
         $response->assertStatus(200)
-            ->assertJson(function (AssertableJson $json) {
-                $json->hasAll(['message', 'success', 'data'])
-                    ->has('data', 1, function (AssertableJson $data) {
-                        $data->hasAll(['id', 'customer', 'start', 'end', 'created_at', 'room'])
-                            ->whereAllType([
-                                'id' => 'integer',
-                                'customer' => 'string',
-                                'start' => 'string',
-                                'end' => 'string',
-                                'created_at' => 'string|null',
-                                'room' => 'array'
-                            ]);
-                    }
-                    );
-            });
+
+        ->assertJson(function (AssertableJson $json) {
+            $json->hasAll(['message', 'success', 'data'])
+                ->has('data', 1, function (AssertableJson $data) {
+                    $data->hasAll(['id', 'customer', 'start', 'end', 'created_at', 'room'])
+                        ->whereAllType([
+                            'id' => 'integer',
+                            'customer' => 'string',
+                            'start' => 'string',
+                            'end' => 'string',
+                            'created_at' => 'string|null',
+                            'room' => 'array'
+                        ]);
+                });
+        });
     }
 
     public function test_bookRoom_success(): void
@@ -63,8 +63,6 @@ class BookingTest extends TestCase
             "start" => "2024-12-15",
             "end" => "2024-12-25"
         ]);
-        // this is a database assertion which tests if the data is being put
-        // into the database
     }
 
     public function test_bookRoom_failure_dueTo_requiredFieldsMissing()
@@ -136,4 +134,34 @@ class BookingTest extends TestCase
                 $json->hasAll(['message']);
             });
     }
+
+    public function test_getBookingsById_success(): void
+    {
+        Booking::factory()->count(2)->create();
+
+        $response = $this->getJson('/api/bookings?room_id=1');
+
+        $response->assertStatus(200)
+        ->assertJson(function (AssertableJson $json) {
+           $json->hasAll(['message', 'success', 'data'])
+            ->has('data', 1 , function (AssertableJson $data) {
+                $data->hasAll(['id', 'customer', 'start', 'end', 'created_at', 'room'])
+                    ->whereAllType([
+                        'id' => 'integer',
+                        'customer' => 'string',
+                        'start' => 'string',
+                        'end' => 'string',
+                        'created_at' => 'string|null',
+                        'room' => 'array'
+                    ]);
+            });
+        });
+    }
+
+   public function test_getBookingsById_failure_idNotFound(): void
+   {
+       $response = $this->getJson('/api/bookings?room_id=1');
+       $response->assertStatus(422)
+           ->assertInvalid('room_id');
+   }
 }
