@@ -158,6 +158,28 @@ class BookingTest extends TestCase
         });
     }
 
+    public function test_reportDataSuccess(): void
+    {
+        Room::factory()->create();
+        Booking::factory()->create();
+        Booking::factory()->create();
+
+        $response = $this->getJson('/api/bookings/report');
+        $response->assertStatus(200)
+            ->assertJson(function (AssertableJson $json) {
+                $json->hasAll(['message', 'data'])
+                    ->has('data', 3 , function (AssertableJson $data) {
+                        $data->hasAll(['id', 'name', 'booking_count', 'average_booking_duration'])
+                        ->whereAllType([
+                            'id' => 'integer',
+                            'name' => 'string',
+                            'booking_count' => 'integer',
+                            'average_booking_duration' => 'integer'
+                        ]);
+                    });
+            });
+    }
+
    public function test_getBookingsById_failure_idNotFound(): void
    {
        $response = $this->getJson('/api/bookings?room_id=1');
