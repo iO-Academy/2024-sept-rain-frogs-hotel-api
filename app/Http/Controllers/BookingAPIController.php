@@ -30,8 +30,8 @@ class BookingAPIController extends Controller
 
         $currentAndFutureBookings = Booking::with('room:id,name')
             ->where('end', '>', now())
-            ->get()?->makeHidden(['updated_at', 'room_id'])
-            ->sortBy('start');
+            ->orderBy('start')
+            ->get()?->makeHidden(['updated_at', 'room_id']);
 
         return response()->json([
             'message' => 'Booking retrieved successfully.',
