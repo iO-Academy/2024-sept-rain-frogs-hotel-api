@@ -70,9 +70,17 @@ class BookingTest extends TestCase
    {
        Booking::factory()->create();
 
-       $response = $this->deleteJson('/api/bookings?room_id=1');
-
-       $response->assertStatus(200)
-               ->assertInvalid('message');
+       $response = $this->deleteJson('/api/bookings/1');
+       $response->assertStatus(200);
    }
+
+    public function test_deleteBooking_failure(): void
+    {
+        $response = $this->deleteJson('/api/bookings/1');
+
+        $response->assertStatus(404)
+        ->assertJson(function (AssertableJson $json) {
+            $json->has('message');
+        });
+    }
 }
