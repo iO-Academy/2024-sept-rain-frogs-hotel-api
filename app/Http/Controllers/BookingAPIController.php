@@ -23,25 +23,18 @@ class BookingAPIController extends Controller
 
          public function report()
      {
-         $roomsWithBookings = Booking::with('room')->get();
-         $total = 0;
-         $bookingCount = $roomsWithBookings->count();
+         $roomsWithBookings = Room::with('booking')
+         ->get()?->makeHidden(['rate', 'image', 'min_capacity', 'max_capacity', 'description', 'type_id', 'created_at',
+                 'updated_at', 'booking']);
 
-             foreach ($roomsWithBookings as $room) {
-                 $bookingStartDate = strtotime($room->start);
-                 $bookingEndDate = strtotime($room->end);
-
-                 $bookingDuration =    $bookingEndDate - $bookingStartDate;
-                 $bookingDurationInDays = $bookingDuration/ (60 * 60 * 24);
-                 $total += $bookingDurationInDays;
-
-             }
-             $result = round($total / $bookingCount,1);
+             $bookingCount = $roomsWithBookings->map(function ($room) {
+                 return ['room' => $room, 'booking_count' => $room->booking->count()];
+             });
 
          return response()->json([
-             'message' => 'Bookings retrieved successfully.',
-             'success' => true,
-             'data' => $result
+             'message' => 'Report generated',
+             'booking count' => $bookingCount,
+             'data' => [$roomsWithBookings, $bookingCount]
          ]);
      }
 }
