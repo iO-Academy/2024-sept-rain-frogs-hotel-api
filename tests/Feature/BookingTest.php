@@ -14,6 +14,30 @@ class BookingTest extends TestCase
 {
     use DatabaseMigrations;
 
+    public function test_getAllBookings_success(): void
+    {
+        Booking::factory()->create();
+
+        $response = $this->getJson('/api/bookings');
+
+        $response->assertStatus(200)
+            ->assertJson(function (AssertableJson $json) {
+                $json->hasAll(['message', 'success', 'data'])
+                    ->has('data', 1, function (AssertableJson $data) {
+                        $data->hasAll(['id', 'customer', 'start', 'end', 'created_at', 'room'])
+                            ->whereAllType([
+                                'id' => 'integer',
+                                'customer' => 'string',
+                                'start' => 'string',
+                                'end' => 'string',
+                                'created_at' => 'string|null',
+                                'room' => 'array'
+                            ]);
+                    }
+                    );
+            });
+    }
+
     public function test_bookRoom_success(): void
     {
         Room::factory()->create();
