@@ -10,28 +10,34 @@ class BookingAPIController extends Controller
     public function index(Request $request)
     {
         $query = Booking::query();
-        if ($request->has('room_id')) {
-            $query->where('room_id', $request->room_id);
-        }
 
-        $bookings = $query->get();
+        if ($request->has('room_id')) {
+            $currentAndFutureBookings = $query->where('room_id', $request->room_id)
+                ->with('room:id,name')
+                ->where('end', '>', now())
+                ->get()?->makeHidden(['updated_at', 'room_id']);
+            if ($currentAndFutureBookings->isEmpty()) {
+                return response()->json([
+                    'message' => 'The selected room id is invalid.',
+                    'success' => false,
+                ],422);
+            }
+            return response()->json([
+                'message' => 'Booking retrieved successfully.',
+                'success' => true,
+                'data' => $currentAndFutureBookings
+            ]);
+        }
 
         $currentAndFutureBookings = Booking::with('room:id,name')
             ->where('end', '>', now())
             ->get()?->makeHidden(['updated_at', 'room_id'])
-            ->map(function ($booking) {
-                $booking->room->makeHidden(['id']);
-                return $booking;
-            })
             ->sortBy('start');
 
         return response()->json([
-                'message' => 'Booking retrieved successfully.',
-                'success' => true,
-                'data' => $currentAndFutureBookings
+            'message' => 'Booking retrieved successfully.',
+            'success' => true,
+            'data' => $currentAndFutureBookings
         ]);
-
     }
-
-
 }
