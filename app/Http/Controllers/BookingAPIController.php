@@ -10,10 +10,11 @@ class BookingAPIController extends Controller
     public function index(Request $request)
     {
         $request->validate([
-            'room_id' => 'nullable|exists:rooms,id',
+            'room_id' => 'nullable|exists:rooms,id'
         ]);
 
         $query = Booking::query();
+
         if ($request->has('room_id')) {
             $currentAndFutureBookings = $query->where('room_id', $request->room_id)
                 ->with('room:id,name')
