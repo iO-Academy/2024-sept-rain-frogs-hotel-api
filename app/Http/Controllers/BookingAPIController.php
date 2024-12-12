@@ -13,10 +13,6 @@ class BookingAPIController extends Controller
         $currentAndFutureBookings = Booking::with('room:id,name')
             ->where('end', '>', now())
             ->get()?->makeHidden(['updated_at', 'room_id'])
-            ->map(function ($booking) {
-                $booking->room->makeHidden(['id']);
-                return $booking;
-            })
             ->sortBy('start');
             return response()->json([
             'message' => 'Booking retrieved successfully.',
@@ -24,14 +20,14 @@ class BookingAPIController extends Controller
             'data' => $currentAndFutureBookings
         ]);
     }
-//     public function report()
-//     {
-//         $roomsWithBookings = Room::with('bookings:id,name')->get();
-//         return response()->json([
-//             'message' => 'Booking retrieved successfully.',
-//             'success' => true,
-//             'data' => $roomsWithBookings
-//         ]);
-//     }
+     public function report()
+     {
+         $roomsWithBookings = Room::with('booking')->get();
+         return response()->json([
+             'message' => 'Booking retrieved successfully.',
+             'success' => true,
+             'data' => $roomsWithBookings
+         ]);
+     }
 
 }
