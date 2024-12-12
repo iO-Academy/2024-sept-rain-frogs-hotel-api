@@ -13,3 +13,6 @@ Route::get('/rooms', [RoomAPIController::class, 'index']);
 Route::get('/rooms/{id}', [RoomAPIController::class, 'find']);
 
 Route::get('/bookings',[BookingAPIController::class,'index']);
+Route::post('/bookings', [BookingAPIController::class, 'create']);
+Route::get('/bookings?room_id={id}', [BookingAPIController::class, '']);
+
