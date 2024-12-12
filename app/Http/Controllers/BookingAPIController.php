@@ -25,8 +25,6 @@ class BookingAPIController extends Controller
 
          public function report()
      {
-//         $averageBookings = AverageStayService::getAverageStay();
-
              $reportData = [];
              // We add this at the top of the method in order to create an empty array (which
              // we will fill with the required variables
