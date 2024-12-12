@@ -79,4 +79,21 @@ class BookingAPIController extends Controller
             'message' => "Booking successfully created"
         ], 201);
     }
+  
+    public function delete(int $id)
+    {
+        $booking = Booking::find($id);
+
+        if(!$booking){
+            return response()->json([
+                "message" => "Unable to cancel booking, booking $id not found"
+            ],404);
+        }
+
+        $booking->delete();
+      
+        return response()->json([
+            "message"=>"Booking $id cancelled"
+        ]);
+    }
 }
