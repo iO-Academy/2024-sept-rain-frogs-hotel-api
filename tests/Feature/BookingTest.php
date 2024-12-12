@@ -38,7 +38,7 @@ class BookingTest extends TestCase
 
     public function test_getBookingsById_success(): void
     {
-        Booking::factory()->create();
+        Booking::factory()->count(2)->create();
 
         $response = $this->getJson('/api/bookings?room_id=1');
 
